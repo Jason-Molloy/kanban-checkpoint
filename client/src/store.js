@@ -21,7 +21,8 @@ export default new Vuex.Store({
   state: {
     user: {},
     boards: [],
-    activeBoard: {}
+    activeBoard: {},
+    lists: {},
   },
   mutations: {
     setUser(state, user) {
@@ -29,6 +30,14 @@ export default new Vuex.Store({
     },
     setBoards(state, boards) {
       state.boards = boards
+    },
+    setLists(state, data) {
+      //create a dictionary where the keys are the boardId and the values are arrays of list objects with the corresponding boardId
+      //data will be an array of lists
+      //use a for loop and for each list in the array check if the boardId of the list is already in the dictionary or not
+      //if it's not then add a key value pair that is :boardId: [],
+      // always push the lists into the array at the boardId 
+      state.lists = data
     }
   },
   actions: {
@@ -85,13 +94,31 @@ export default new Vuex.Store({
         .then(res => {
           dispatch('getBoards')
         })
-    }
+    },
     //#endregion
 
 
     //#region -- LISTS --
 
-
+    getLists({ commit, dispatch }) {
+      api.get('board/')
+        .then(res => {
+          console.log(res)
+          commit('setLists', res.data)
+        })
+    },
+    addList({ commit, dispatch }, listData) {
+      api.post('board/', listData)
+        .then(serverBoard => {
+          dispatch('getLists')
+        })
+    },
+    deleteList({ commit, dispatch }, listId) {
+      api.delete('board/', listId)
+        .then(res => {
+          dispatch('getLists')
+        })
+    }
 
     //#endregion
   }
