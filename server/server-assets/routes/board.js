@@ -1,5 +1,5 @@
 let router = require('express').Router()
-let Boards = require('../models/board')
+let Boards = require('../models/board.js')
 
 //GET
 router.get('/', (req, res, next) => {
@@ -50,17 +50,8 @@ router.put('/:id', (req, res, next) => {
 
 //DELETE
 router.delete('/:id', (req, res, next) => {
-  Boards.findOneAndDelete({ _id: req.params.id, authorId: req.session.uid })
+  Boards.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
     .then(board => {
-      // if (!board.authorId.equals(req.session.uid)) {
-      //   return res.status(401).send("ACCESS DENIED!")
-      // }
-      // board.remove(err => {
-      //   if (err) {
-      //     console.log(err)
-      //     next()
-      //     return
-      //   }
       res.send("Successfully Deleted")
     })
     .catch(err => {

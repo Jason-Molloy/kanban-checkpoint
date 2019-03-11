@@ -1,6 +1,9 @@
 <template>
   <div class="boards">
     WELCOME TO THE BOARDS!!!
+    <button @click="logoutUser">
+      Logout
+    </button>
     <form @submit.prevent="addBoard">
       <input type="text" placeholder="title" v-model="newBoard.title" required>
       <input type="text" placeholder="description" v-model="newBoard.description">
@@ -10,6 +13,7 @@
       <router-link :to="{name: 'board', params: {boardId: board._id}}">{{board.title}}</router-link>
       <button @click="deleteBoard(board._id)">DELETE BOARD</button>
     </div>
+
   </div>
 </template>
 
@@ -45,6 +49,9 @@
       },
       deleteBoard(boardId) {
         this.$store.dispatch("deleteBoard", boardId);
+      },
+      logoutUser() {
+        this.$store.dispatch('logout')
       }
     }
   };

@@ -57,8 +57,15 @@ export default new Vuex.Store({
           router.push({ name: 'boards' })
         })
     },
+    logout({ commit, dispatch }) {
+      auth.delete('logout')
+        .then(res => {
+          commit('setUser', {})
+          router.push({ name: 'login' })
+        })
+    },
     //#endregion
-
+    //REMOVE THE ACTIVE SESSION FROM THE DATABASE
 
     //#region -- BOARDS --
     getBoards({ commit, dispatch }) {
