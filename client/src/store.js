@@ -22,7 +22,8 @@ export default new Vuex.Store({
     user: {},
     boards: [],
     activeBoard: {},
-    lists: {},
+    lists: [],
+    tasks: []
   },
   mutations: {
     setUser(state, user) {
@@ -31,13 +32,20 @@ export default new Vuex.Store({
     setBoards(state, boards) {
       state.boards = boards
     },
+    setActiveBoard(state, data) {
+      state.activeBoard = data
+    },
     setLists(state, data) {
+
+      state.lists = data
+    },
+    setTasks(state, data) {
       //create a dictionary where the keys are the boardId and the values are arrays of list objects with the corresponding boardId
       //data will be an array of lists
       //use a for loop and for each list in the array check if the boardId of the list is already in the dictionary or not
       //if it's not then add a key value pair that is :boardId: [],
-      // always push the lists into the array at the boardId 
-      state.lists = data
+      // always push the lists into the array at the boardId
+      state.tasks = data
     }
   },
   actions: {
@@ -83,14 +91,27 @@ export default new Vuex.Store({
           commit('setBoards', res.data)
         })
     },
+    setActiveBoard({ commit, dispatch }, boardId) {
+      api.get('boards/' + boardId)
+        .then(res => {
+          console.log(res)
+          commit('setActiveBoard', res.data)
+        })
+    },
     addBoard({ commit, dispatch }, boardData) {
       api.post('boards', boardData)
         .then(serverBoard => {
           dispatch('getBoards')
         })
     },
-    deleteBoard({ commit, dispatch }, boardId) {
-      api.delete('boards/' + boardId)
+    editBoard({ commit, dispatch }, board) {
+      api.put('boards/' + board._id, board)
+        .then(res => {
+          dispatch('getBoards')
+        })
+    },
+    deleteBoard({ commit, dispatch }, board) {
+      api.delete('boards/' + board._id, board)
         .then(res => {
           dispatch('getBoards')
         })
@@ -99,27 +120,61 @@ export default new Vuex.Store({
 
 
     //#region -- LISTS --
-
-    getLists({ commit, dispatch }) {
-      api.get('board/')
+    addList({ commit, dispatch }, listData) {
+      api.post(`boards/${listData.boardId}/lists`, listData)
+        .then(serverBoard => {
+          dispatch('getLists')
+        })
+    },
+    getLists({ commit, dispatch }, boardId) {
+      api.get('boards/' + boardId + '/lists')
         .then(res => {
           console.log(res)
           commit('setLists', res.data)
         })
     },
-    addList({ commit, dispatch }, listData) {
-      api.post('board/', listData)
-        .then(serverBoard => {
-          dispatch('getLists')
+    editList({ commit, dispatch }, listData) {
+      api.put(`boards/${listData.boardId}/lists/${listData.listId}`)
+        .then(res => {
+          console.log(res)
+          dispatch('getLists', listData.boardId)
         })
     },
-    deleteList({ commit, dispatch }, listId) {
-      api.delete('board/', listId)
+    deleteList({ commit, dispatch }, listData) {
+      api.delete(`boards/${listData.boardId}/lists/${listData._id}`)
         .then(res => {
-          dispatch('getLists')
+          dispatch('getLists', listData.boardId)
         })
-    }
+    },
 
+    //#endregion
+    //#region -- TASKS
+    addTask({ commit, dispatch }, taskData) {
+      api.post(`boards/${listData.boardId}/lists/${listData._id}/tasks`, taskData)
+        .then(serverBoard => {
+          dispatch('getTasks')
+        })
+    },
+    getTasks({ commit, dispatch }, listData) {
+      api.get(`boards/${listData.boardId}/lists/${listData._id}/tasks/`)
+        .then(res => {
+          console.log(res)
+          commit('setTasks', res.data)
+        })
+    },
+    // editTask({ commit, dispatch }, listData) {
+    //   api.put(`boards/${listData.boardId}/lists/${listData.listId}`)
+    //     .then(res => {
+    //       console.log(res)
+    //       dispatch('getLists')
+    //     })
+    // },
+    // deleteTask({ commit, dispatch }, listData) {
+    //   api.delete(`boards/${listData.boardId}/lists/${listData.listId}`)
+    //     .then(res => {
+    //       dispatch('getLists')
+    //     })
+    // }
     //#endregion
   }
 })

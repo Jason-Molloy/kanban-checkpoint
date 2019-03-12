@@ -45,9 +45,10 @@ let boardRoutes = require('./server-assets/routes/board')
 server.use('/api/boards', boardRoutes)
 
 let listRoutes = require('./server-assets/routes/list')
-server.use('/api/board/:id/', listRoutes)
+server.use('/api/boards', listRoutes)
 
-
+let taskRoutes = require('./server-assets/routes/task')
+server.use('/api/boards', taskRoutes)
 
 
 

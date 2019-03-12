@@ -1,9 +1,12 @@
 let router = require('express').Router()
 let Lists = require('../models/list')
 
+let basePath = '/:boardId/lists'
 //GET
-router.get('/', (req, res, next) => {
-    Lists.find({ authorId: req.session.uid })
+router.get(basePath, (req, res, next) => {
+    let boardId = req.params.boardId
+    // console.log('[ListRequest]: ', boardId, "user:", req.session.uid.toString())
+    Lists.find({ authorId: req.session.uid, boardId: boardId })
         .then(data => {
             res.send(data)
         })
@@ -13,9 +16,11 @@ router.get('/', (req, res, next) => {
         })
 })
 
+
 //POST
-router.post('/', (req, res, next) => {
-    req.body.authorId = req.session.uid
+router.post(basePath, (req, res, next) => {
+    req.body.authorId = req.session.uid;
+    req.body.boardId = req.params.boardId
     Lists.create(req.body)
         .then(newList => {
             res.send(newList)
@@ -27,30 +32,20 @@ router.post('/', (req, res, next) => {
 })
 
 //PUT
-router.put('/:id', (req, res, next) => {
-    Lists.findById(req.params.id)
+router.put(basePath + '/:id', (req, res, next) => {
+    Lists.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
         .then(list => {
-            if (!list.authorId.equals(req.session.uid)) {
-                return res.status(401).send("ACCESS DENIED!")
-            }
-            list.update(req.body, (err) => {
-                if (err) {
-                    console.log(err)
-                    next()
-                    return
-                }
-                res.send("Successfully Updated")
-            });
+            res.status(200).send(list)
         })
         .catch(err => {
-            console.log(err)
-            next()
+            res.status(500).send(err)
         })
 })
 
+
 //DELETE
-router.delete('/:id', (req, res, next) => {
-    Lists.findOneAndDelete({ _id: req.params.id, authorId: req.session.uid })
+router.delete(basePath + '/:id', (req, res, next) => {
+    Lists.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid, boardId: req.params.boardId })
         .then(list => {
             res.send("Successfully Deleted")
         })

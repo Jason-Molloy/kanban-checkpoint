@@ -1,9 +1,12 @@
 let router = require('express').Router()
 let Tasks = require('../models/task')
 
+let basePath = '/:boardId/lists/:listId/tasks'
+
 //GET
-router.get('/', (req, res, next) => {
-    Tasks.find({ authorId: req.session.uid })
+router.get(basePath, (req, res, next) => {
+    let listId = req.params.listId
+    Tasks.find({ authorId: req.session.uid, listId })
         .then(data => {
             res.send(data)
         })
@@ -14,8 +17,11 @@ router.get('/', (req, res, next) => {
 })
 
 //POST
-router.post('/', (req, res, next) => {
-    req.body.authorId = req.session.uid
+router.post(basePath, (req, res, next) => {
+    let authorId = req.session.uid
+    let boardId = req.params.boardId
+    let listId = req.params.listId
+    let description = req.params.description
     Tasks.create(req.body)
         .then(newTask => {
             res.send(newTask)
@@ -27,30 +33,19 @@ router.post('/', (req, res, next) => {
 })
 
 //PUT
-router.put('/:id', (req, res, next) => {
-    Tasks.findById(req.params.id)
+router.put(basePath + '/:id', (req, res, next) => {
+    Tasks.findOneAndUpdate({ _id: req.params.id, authorId: req.session.uid }, req.body, { new: true })
         .then(task => {
-            if (!task.authorId.equals(req.session.uid)) {
-                return res.status(401).send("ACCESS DENIED!")
-            }
-            task.update(req.body, (err) => {
-                if (err) {
-                    console.log(err)
-                    next()
-                    return
-                }
-                res.send("Successfully Updated")
-            });
+            res.status(200).send(task)
         })
         .catch(err => {
-            console.log(err)
-            next()
+            res.status(500).send(err)
         })
 })
 
 //DELETE
-router.delete('/:id', (req, res, next) => {
-    Tasks.findOneAndDelete({ _id: req.params.id, authorId: req.session.uid })
+router.delete(basePath + '/:id', (req, res, next) => {
+    Tasks.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
         .then(task => {
             res.send("Successfully Deleted")
         })

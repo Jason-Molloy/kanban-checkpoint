@@ -1,6 +1,10 @@
 <template>
-  <div class="board container-fluid">
+  <div class="board container-fluid" v-if="board._id">
+    <button @click="logoutUser">
+      Logout
+    </button>
     {{board.title}}
+    {{board.description}}
     <button class="btn btn-primary" v-on:click="showForm = !showForm">New List</button>
     <span v-show="showForm">
       <form @submit.prevent="createList">
@@ -9,8 +13,7 @@
       </form>
     </span>
     <div class="d-flex row">
-      <list v-for="list in lists" :listData='list'>
-        {{list.title}}
+      <list v-for="listObj in lists" :listData='listObj'>
       </list>
     </div>
   </div>
@@ -20,9 +23,16 @@
   import List from '@/components/List.vue'
   export default {
     name: "board",
+    mounted() {
+      this.$store.dispatch('setActiveBoard', this.boardId)
+      this.$store.dispatch('getLists', this.boardId)
+    },
     computed: {
       board() {
-        return this.$store.state.boards.find(b => b._id == this.boardId) || { title: 'Loading...' }
+        return this.$store.state.activeBoard
+      },
+      lists() {
+        return this.$store.state.lists
       }
     },
     data() {
@@ -37,6 +47,9 @@
       createList() {
         this.newList.boardId = this.boardId
         this.$store.dispatch('addList', this.newList)
+      },
+      logoutUser() {
+        this.$store.dispatch('logout')
       }
     },
     components: {
