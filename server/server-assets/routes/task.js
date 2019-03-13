@@ -12,23 +12,22 @@ router.get(basePath, (req, res, next) => {
         })
         .catch(err => {
             console.log(err)
-            next()
+            next(err)
         })
 })
 
 //POST
 router.post(basePath, (req, res, next) => {
-    let authorId = req.session.uid
-    let boardId = req.params.boardId
-    let listId = req.params.listId
-    let description = req.params.description
+    req.body.authorId = req.session.uid
+    req.body.boardId = req.params.boardId
+    req.body.listId = req.params.listId
     Tasks.create(req.body)
         .then(newTask => {
             res.send(newTask)
         })
         .catch(err => {
             console.log(err)
-            next()
+            next(err)
         })
 })
 

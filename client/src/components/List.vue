@@ -1,5 +1,5 @@
 <template>
-  <div class="list card border-primary mb-3 d-flex col-3">
+  <div class="list card border-primary m-1 d-flex col-4">
     <div class="card-header">
       <div class="card-body text-primary">
         <h5 class="card-title">{{listData.title}}</h5>
@@ -34,14 +34,15 @@
       return {
         showForm: false,
         newTask: {
+          listId: this.listData._id,
+          boardId: this.listData.boardId,
           description: ''
         }
       }
     },
     computed: {
       tasks() {
-        // return this.$store.state.tasks
-        return []
+        return this.$store.state.tasks[this.listData._id] || []
       }
     },
     methods: {
@@ -49,8 +50,8 @@
         this.$store.dispatch('deleteList', this.listData)
       },
       addTask() {
-        this.newTask.listId = listData._id
-        this.$store.dispatch('addTask', this.taskData)
+        // this.newTask.listId = this.listData._id
+        this.$store.dispatch('addTask', this.newTask)
       }
     },
     components: {
@@ -61,4 +62,7 @@
 
 
 <style scoped>
+  .card {
+    max-width: 30%;
+  }
 </style>

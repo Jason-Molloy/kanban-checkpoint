@@ -1,10 +1,16 @@
 <template>
     <div class="task">
-        <div class="list card border-primary mb-1 d-flex col-3">
+        <div class="list card border-primary mb-1 d-flex col">
             <div class="card-header">
                 <div class="card-body text-primary">
-                    <h5 class="card-title">task {{taskData.description}}</h5>
-                    <button>Add Comment</button>
+                    <h5 class="card-title">{{taskData.description}}</h5>
+                    <button v-on:click="showForm = !showForm">Add Comment</button>
+                    <span v-show="showForm">
+                        <form @submit.prevent="addComment">
+                            <textarea type="text" v-model="newComment.content" placeholder="Task Name"></textarea>
+                            <button type="submit">Add Comment</button>
+                        </form>
+                    </span>
                     <button>Delete Task</button>
                 </div>
             </div>
@@ -22,7 +28,13 @@
             }
         },
         data() {
-            return {}
+            return {
+                showForm: false,
+                newComment: {
+                    content: '',
+                    taskId: this.taskData._id
+                }
+            }
         },
         computed: {
             lists() {

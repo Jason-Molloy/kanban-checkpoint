@@ -12,7 +12,7 @@
         <button type="submit">Add List</button>
       </form>
     </span>
-    <div class="d-flex row">
+    <div class="d-flex row justify-content-center">
       <list v-for="listObj in lists" :listData='listObj'>
       </list>
     </div>
@@ -23,6 +23,7 @@
   import List from '@/components/List.vue'
   export default {
     name: "board",
+    props: ["boardId"],
     mounted() {
       this.$store.dispatch('setActiveBoard', this.boardId)
       this.$store.dispatch('getLists', this.boardId)
@@ -54,7 +55,6 @@
     },
     components: {
       List
-    },
-    props: ["boardId"]
+    }
   };
 </script>

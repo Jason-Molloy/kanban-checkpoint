@@ -51,7 +51,10 @@ let taskRoutes = require('./server-assets/routes/task')
 server.use('/api/boards', taskRoutes)
 
 
-
+//default error handler
+server.use('*', (err, req, res, next) => {
+  res.status(500).send(err)
+})
 
 
 //Catch all

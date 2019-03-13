@@ -23,7 +23,7 @@ export default new Vuex.Store({
     boards: [],
     activeBoard: {},
     lists: [],
-    tasks: []
+    tasks: {}
   },
   mutations: {
     setUser(state, user) {
@@ -36,16 +36,11 @@ export default new Vuex.Store({
       state.activeBoard = data
     },
     setLists(state, data) {
-
       state.lists = data
     },
     setTasks(state, data) {
-      //create a dictionary where the keys are the boardId and the values are arrays of list objects with the corresponding boardId
-      //data will be an array of lists
-      //use a for loop and for each list in the array check if the boardId of the list is already in the dictionary or not
-      //if it's not then add a key value pair that is :boardId: [],
-      // always push the lists into the array at the boardId
-      state.tasks = data
+
+      Vue.set(state.tasks, data.listId, data.tasks)
     }
   },
   actions: {
@@ -129,14 +124,12 @@ export default new Vuex.Store({
     getLists({ commit, dispatch }, boardId) {
       api.get('boards/' + boardId + '/lists')
         .then(res => {
-          console.log(res)
           commit('setLists', res.data)
         })
     },
     editList({ commit, dispatch }, listData) {
       api.put(`boards/${listData.boardId}/lists/${listData.listId}`)
         .then(res => {
-          console.log(res)
           dispatch('getLists', listData.boardId)
         })
     },
@@ -150,16 +143,22 @@ export default new Vuex.Store({
     //#endregion
     //#region -- TASKS
     addTask({ commit, dispatch }, taskData) {
-      api.post(`boards/${listData.boardId}/lists/${listData._id}/tasks`, taskData)
-        .then(serverBoard => {
-          dispatch('getTasks')
+      api.post(`boards/${taskData.boardId}/lists/${taskData.listId}/tasks`, taskData)
+        .then(res => {
+          console.log('adding task', res)
+          dispatch('getTasks', taskData)
         })
     },
-    getTasks({ commit, dispatch }, listData) {
-      api.get(`boards/${listData.boardId}/lists/${listData._id}/tasks/`)
+    getTasks({ commit, dispatch }, payload) {
+      //Payload could be a task or a list
+      api.get(`boards/${payload.boardId}/lists/${payload.listId || payload._id}/tasks/`)
         .then(res => {
-          console.log(res)
-          commit('setTasks', res.data)
+          //res is an array of tasks for that listId
+          let commitPayload = {
+            listId: payload.listId || payload._id,
+            tasks: res.data
+          }
+          commit('setTasks', commitPayload)
         })
     },
     // editTask({ commit, dispatch }, listData) {
