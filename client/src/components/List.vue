@@ -1,19 +1,21 @@
 <template>
-  <div class="list card border-primary m-1 d-flex col-4">
+  <div class="list card border-dark m-1 d-flex col-4">
+    <!-- <drop class="drop" @drop="handleDrop"> -->
     <div class="card-header">
-      <div class="card-body text-primary">
+      <div class="card-body text-dark">
         <h5 class="card-title">{{listData.title}}</h5>
-        <button @click="deleteList">Delete List</button>
-        <button class="btn btn-primary" v-on:click="showForm = !showForm">New Task</button>
+        <button class="btn btn-danger" @click="deleteList">Delete List</button>
+        <button class="btn btn-dark" v-on:click="showForm = !showForm">New Task</button>
         <span v-show="showForm">
           <form @submit.prevent="addTask">
-            <input type="text" v-model="newTask.description" placeholder="Task Name">
-            <button type="submit">Add Task</button>
+            <input type="text" class="form-control" v-model="newTask.description" placeholder="Task Name">
+            <button class="btn btn-outline-dark" @click="showForm = !showForm" type="submit">Add Task</button>
           </form>
         </span>
         <task v-for="taskObj in tasks" :taskData='taskObj' :listData='listData'></task>
       </div>
     </div>
+    <!-- </drop> -->
   </div>
 </template>
 
@@ -50,9 +52,12 @@
         this.$store.dispatch('deleteList', this.listData)
       },
       addTask() {
-        // this.newTask.listId = this.listData._id
-        this.$store.dispatch('addTask', this.newTask)
-      }
+        this.$store.dispatch('addTask', { ...this.newTask })
+        this.newTask.description = ''
+      },
+      // handleDrop(data, event) {
+      //   data
+      // }
     },
     components: {
       Task

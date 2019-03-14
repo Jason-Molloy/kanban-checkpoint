@@ -39,7 +39,6 @@ export default new Vuex.Store({
       state.lists = data
     },
     setTasks(state, data) {
-
       Vue.set(state.tasks, data.listId, data.tasks)
     }
   },
@@ -89,7 +88,6 @@ export default new Vuex.Store({
     setActiveBoard({ commit, dispatch }, boardId) {
       api.get('boards/' + boardId)
         .then(res => {
-          console.log(res)
           commit('setActiveBoard', res.data)
         })
     },
@@ -115,10 +113,10 @@ export default new Vuex.Store({
 
 
     //#region -- LISTS --
-    addList({ commit, dispatch }, listData) {
-      api.post(`boards/${listData.boardId}/lists`, listData)
-        .then(serverBoard => {
-          dispatch('getLists')
+    addList({ commit, dispatch }, payload) {
+      api.post(`boards/${payload.boardId}/lists`, payload)
+        .then(res => {
+          dispatch('getLists', payload.boardId)
         })
     },
     getLists({ commit, dispatch }, boardId) {
@@ -161,19 +159,31 @@ export default new Vuex.Store({
           commit('setTasks', commitPayload)
         })
     },
-    // editTask({ commit, dispatch }, listData) {
-    //   api.put(`boards/${listData.boardId}/lists/${listData.listId}`)
-    //     .then(res => {
-    //       console.log(res)
-    //       dispatch('getLists')
-    //     })
-    // },
-    // deleteTask({ commit, dispatch }, listData) {
-    //   api.delete(`boards/${listData.boardId}/lists/${listData.listId}`)
-    //     .then(res => {
-    //       dispatch('getLists')
-    //     })
-    // }
+    editTask({ commit, dispatch }, payload) {
+      api.put(`boards/${payload.boardId}/lists/${payload.listId}/tasks/${payload._id}`, payload)
+        .then(res => {
+          console.log(res)
+          dispatch('getTasks', payload)
+          if (payload.oldListId) {
+            let payload2 = {
+              listId: payload.oldListId,
+              boardId: payload.boardId
+            }
+            dispatch('getTasks', payload2)
+          }
+        })
+    },
+    deleteTask({ commit, dispatch }, payload) {
+      api.delete(`boards/${payload.boardId}/lists/${payload.listId}/tasks/${payload._id}`)
+        .then(res => {
+          console.log('deleted task')
+          dispatch('getTasks', payload)
+        })
+    },
+    //#endregion
+
+    //#region -- COMMENTS
+
     //#endregion
   }
 })
