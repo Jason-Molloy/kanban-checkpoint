@@ -7,7 +7,7 @@ let comment = new Schema({
     content: { type: String, required: true },
     taskId: { type: ObjectId, ref: 'Task', required: true },
 
-})
+}, { timestamps: true })
 
 let schema = new Schema({
     description: { type: String, required: true },

@@ -3,7 +3,6 @@
         <div class="list card border-dark mb-1 d-flex col">
             <div class="card-header">
                 <div class="card-body text-dark">
-                    <!-- <drag class="drag" :transfer-data="{draggable}"> -->
                     <div class="dropdown dropright">
                         <h5 style="display: inline-block;" class="card-title">{{taskData.description}}</h5>
                         <button style="display: inline-block;" class="btn btn-sm btn-outline-danger dropdown-toggle"
@@ -14,7 +13,6 @@
                                 {{list.title}}</a>
                         </div>
                     </div>
-                    <!-- </drag> -->
                     <button class="btn btn-dark" v-on:click="showForm = !showForm">Add Comment</button>
                     <span v-show="showForm">
                         <form @submit.prevent="addComment">
@@ -29,6 +27,7 @@
                         <div class="card-header">
                             <div class="card-body text-dark ">
                                 <h5 class="card-title">{{comment.content}}</h5>
+                                <p class="card-title">{{comment.createdAt | formatTime}}</p>
                                 <button class="btn btn-outline-danger" @click="deleteComment(comment._id)">
                                     Delete Comment</button>
                             </div>
@@ -41,6 +40,7 @@
 </template>
 
 <script>
+    import Moment from 'moment'
     export default {
         name: "task",
         props: ["listData", "taskData"],
@@ -51,9 +51,6 @@
         },
         data() {
             return {
-                // draggable: {
-                //     taskData
-                // },
                 showForm: false,
                 newComment: {
                     content: '',
@@ -81,7 +78,8 @@
                 this.$store.dispatch('deleteTask', this.taskData)
             },
             addComment() {
-                this.taskData.comments.push({ ...this.newComment })
+                let date = new Date()
+                this.taskData.comments.push({ ...this.newComment, createdAt: date.getTime() })
                 this.$store.dispatch('editTask', this.taskData)
                 this.newComment.content = ''
             },
@@ -94,6 +92,11 @@
                 this.$store.dispatch('editTask', this.taskData)
             }
         },
-        components: {}
+        components: {},
+        filters: {
+            formatTime(date) {
+                return Moment(String(date)).fromNow()
+            }
+        }
     }
 </script>
