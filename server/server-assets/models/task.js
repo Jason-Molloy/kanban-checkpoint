@@ -7,8 +7,6 @@ let comment = new Schema({
     content: { type: String, required: true },
     taskId: { type: ObjectId, ref: 'Task', required: true },
     user: { type: String, ref: 'User' },
-
-
 }, { timestamps: true })
 
 let schema = new Schema({
