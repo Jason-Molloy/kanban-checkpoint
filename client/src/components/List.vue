@@ -65,4 +65,8 @@
   .card {
     max-width: 30%;
   }
+
+  .list {
+    background: white
+  }
 </style>

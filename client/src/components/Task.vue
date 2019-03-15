@@ -1,11 +1,11 @@
 <template>
     <div class="task">
-        <div class="list card border-dark mb-1 d-flex col">
+        <div class=" task card border-dark mb-1 d-flex col" id="task-card">
             <div class="card-header">
                 <div class="card-body text-dark">
                     <div class="dropdown dropright">
-                        <h5 style="display: inline-block;" class="card-title">{{taskData.description}}</h5>
-                        <button style="display: inline-block;" class="btn btn-sm btn-outline-danger dropdown-toggle"
+                        <h5 style="display: inline-block;" class="task-card-title">{{taskData.description}}</h5>
+                        <button style="display: inline-block;" class="btn btn-sm btn-outline-light dropdown-toggle"
                             type="button" id="dropdownMenuButton" data-toggle="dropdown">
                         </button>
                         <div class="dropdown-menu">
@@ -18,12 +18,13 @@
                         <form @submit.prevent="addComment">
                             <textarea type="text" class="form-control" v-model="newComment.content"
                                 placeholder="comment"></textarea>
-                            <button class="btn btn-outline-dark" v-on:click="showForm = !showForm"
+                            <button class="btn btn-outline-light mb-2" v-on:click="showForm = !showForm"
                                 type="submit">Submit</button>
                         </form>
                     </span>
                     <button class="btn btn-danger" @click="deleteTask">Delete Task</button>
-                    <div v-for="comment in taskData.comments" class="list card border-dark mb-1 d-flex col">
+                    <div v-for="comment in taskData.comments" id="comment-card"
+                        class="list card border-dark mb-1 d-flex col">
                         <div class="card-header">
                             <div class="card-body text-dark ">
                                 <h5 class="card-title">{{comment.content}}</h5>
@@ -102,3 +103,27 @@
         }
     }
 </script>
+
+<style>
+    .task {
+        background: #8e0c0f
+    }
+
+    .task-card-title {
+        color: white
+    }
+
+    #comment-card {
+        border: 2px solid rgba(0, 0, 0, .125);
+        border-radius: .5rem;
+    }
+
+    #task-card {
+        border: 1px solid rgba(0, 0, 0, .125);
+        border-radius: .2rem;
+    }
+
+    button {
+        margin-bottom: 5px
+    }
+</style>
