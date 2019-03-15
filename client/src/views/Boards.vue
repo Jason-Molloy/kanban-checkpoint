@@ -1,9 +1,11 @@
 <template>
   <div class="boards container-fluid">
-    <div id="navbar" class="d-flex row justify-content-center">
-      <img :src="Graphic" alt="">
+    <div class="d-flex row">
+      <button class="btn btn-outline-danger btn-lg mb-3 justify-self-left" @click="logoutUser">Logout</button>
     </div>
-    <button class="btn btn-outline-danger btn-lg mb-3" @click="logoutUser">Logout</button>
+    <div id="navbar" class="d-flex row justify-content-center">
+      <img :src="Graphic">
+    </div>
     <form @submit.prevent="addBoard">
       <div class="form-row justify-content-center">
         <div class="col-3">
@@ -16,7 +18,7 @@
       </div>
     </form>
     <div class="d-flex row justify-content-center" v-for="board in boards" :key="board._id">
-      <div class="card border-dark m-1 d-flex col-3">
+      <div class="card border-dark m-1 d-flex col-5">
         <div class="card-header">
           <router-link :to="{name: 'board', params: {boardId: board._id}}">
             <h1>{{board.title}}</h1>
@@ -102,8 +104,8 @@
   }
 
   img {
-    width: 35vw;
-    height: 30vh;
+    width: 44vw;
+    height: 39vh;
     margin-bottom: 10px;
     margin-top: 8vh
   }

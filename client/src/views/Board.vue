@@ -4,11 +4,15 @@
       <button class="btn btn-outline-danger btn-lg" @click="logoutUser">
         Logout
       </button>
-      <h1>{{board.title}}</h1>
-      <h3>hello he</h3>
+      <h1 contentEditable="true">{{board.title}}</h1>
+      <router-link :to="{name: 'boards'}">
+        <button class="btn btn-outline-danger btn-lg">
+          Back
+        </button>
+      </router-link>
     </div>
     <div class="row">
-      <div class="col-4 offset-4 justify-content-between">
+      <div class="col-4 offset-4 justify-content-between" contentEditable="true">
         <h2>{{board.description}}</h2>
       </div>
     </div>

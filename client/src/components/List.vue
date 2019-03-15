@@ -1,9 +1,8 @@
 <template>
   <div class="list card border-dark m-1 d-flex col-4">
-    <!-- <drop class="drop" @drop="handleDrop"> -->
     <div class="card-header">
       <div class="card-body text-dark">
-        <h5 class="card-title">{{listData.title}}</h5>
+        <h5 class="card-title" contentEditable="true">{{listData.title}}</h5>
         <button class="btn btn-danger" @click="deleteList">Delete List</button>
         <button class="btn btn-dark" v-on:click="showForm = !showForm">New Task</button>
         <span v-show="showForm">
@@ -15,7 +14,6 @@
         <task v-for="taskObj in tasks" :taskData='taskObj' :listData='listData'></task>
       </div>
     </div>
-    <!-- </drop> -->
   </div>
 </template>
 
@@ -54,10 +52,7 @@
       addTask() {
         this.$store.dispatch('addTask', { ...this.newTask })
         this.newTask.description = ''
-      },
-      // handleDrop(data, event) {
-      //   data
-      // }
+      }
     },
     components: {
       Task
@@ -69,5 +64,9 @@
 <style scoped>
   .card {
     max-width: 30%;
+  }
+
+  .list {
+    background: white
   }
 </style>

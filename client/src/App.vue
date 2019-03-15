@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
   import Checker from '@/assets/checker.jpg'
   export default {
     name: 'App',
