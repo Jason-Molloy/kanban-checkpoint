@@ -4,7 +4,8 @@
             <div class="card-header">
                 <div class="card-body text-dark">
                     <div class="dropdown dropright">
-                        <h5 style="display: inline-block;" class="task-card-title">{{taskData.description}}</h5>
+                        <h5 style="display: inline-block;" class="task-card-title" contentEditable="true">
+                            {{taskData.description}}</h5>
                         <button style="display: inline-block;" class="btn btn-sm btn-outline-light dropdown-toggle"
                             type="button" id="dropdownMenuButton" data-toggle="dropdown">
                         </button>
@@ -27,7 +28,7 @@
                         class="list card border-dark mb-1 d-flex col">
                         <div class="card-header">
                             <div class="card-body text-dark ">
-                                <h5 class="card-title">{{comment.content}}</h5>
+                                <h5 class="card-title" contentEditable="true">{{comment.content}}</h5>
                                 <p class="card-title">{{comment.createdAt | formatTime}}</p>
                                 <p class="card-title">Commenter: {{comment.user}}</p>
                                 <button class="btn btn-outline-danger" @click="deleteComment(comment._id)">
@@ -114,7 +115,7 @@
     }
 
     #comment-card {
-        border: 2px solid rgba(0, 0, 0, .125);
+        border: 3px solid rgba(0, 0, 0, .125);
         border-radius: .5rem;
     }
 

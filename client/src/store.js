@@ -7,13 +7,13 @@ Vue.use(Vuex)
 
 let auth = Axios.create({
   baseURL: "//localhost:3000/auth/",
-  timeout: 3000,
+  timeout: 6000,
   withCredentials: true
 })
 
 let api = Axios.create({
   baseURL: "//localhost:3000/api/",
-  timeout: 3000,
+  timeout: 6000,
   withCredentials: true
 })
 

@@ -2,7 +2,7 @@
   <div class="list card border-dark m-1 d-flex col-4">
     <div class="card-header">
       <div class="card-body text-dark">
-        <h5 class="card-title">{{listData.title}}</h5>
+        <h5 class="card-title" contentEditable="true">{{listData.title}}</h5>
         <button class="btn btn-danger" @click="deleteList">Delete List</button>
         <button class="btn btn-dark" v-on:click="showForm = !showForm">New Task</button>
         <span v-show="showForm">
