@@ -5,7 +5,6 @@ let basePath = '/:boardId/lists'
 //GET
 router.get(basePath, (req, res, next) => {
     let boardId = req.params.boardId
-    // console.log('[ListRequest]: ', boardId, "user:", req.session.uid.toString())
     Lists.find({ authorId: req.session.uid, boardId: boardId })
         .then(data => {
             res.send(data)

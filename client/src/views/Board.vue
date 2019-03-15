@@ -5,7 +5,11 @@
         Logout
       </button>
       <h1>{{board.title}}</h1>
-      <h3>hello he</h3>
+      <router-link :to="{name: 'boards'}">
+        <button class="btn btn-outline-danger btn-lg">
+          Back
+        </button>
+      </router-link>
     </div>
     <div class="row">
       <div class="col-4 offset-4 justify-content-between">

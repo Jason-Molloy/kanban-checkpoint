@@ -28,6 +28,7 @@
                             <div class="card-body text-dark ">
                                 <h5 class="card-title">{{comment.content}}</h5>
                                 <p class="card-title">{{comment.createdAt | formatTime}}</p>
+                                <p class="card-title">Commenter: {{comment.user}}</p>
                                 <button class="btn btn-outline-danger" @click="deleteComment(comment._id)">
                                     Delete Comment</button>
                             </div>
@@ -54,6 +55,7 @@
                 showForm: false,
                 newComment: {
                     content: '',
+                    user: this.$store.state.user.name,
                     taskId: this.taskData._id,
                     listId: this.taskData.listId,
                     boardId: this.taskData.boardId
